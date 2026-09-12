@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+{% if category %}
+{{ category.name }} Posts | My Blog
+{% elif tag %}
+{{ tag.name }} Posts | My Blog
+{% else %}
+Posts | My Blog
+{% endif %}
+{% endblock %}
+
+{% block meta_description %}
+{% if category %}
+Read the latest posts in the {{ category.name }} category on My Blog.
+{% elif tag %}
+Read the latest posts tagged with {{ tag.name }} on My Blog.
+{% else %}
+Browse posts, articles, tutorials, and updates on My Blog.
+{% endif %}
+{% endblock %}
+
+{% block og_title %}
+{% if category %}
+{{ category.name }} Posts | My Blog
+{% elif tag %}
+{{ tag.name }} Posts | My Blog
+{% else %}
+Posts | My Blog
+{% endif %}
+{% endblock %}
+
+{% block og_description %}
+{% if category %}
+Read the latest posts in the {{ category.name }} category on My Blog.
+{% elif tag %}
+Read the latest posts tagged with {{ tag.name }} on My Blog.
+{% else %}
+Browse posts, articles, tutorials, and updates on My Blog.
+{% endif %}
+{% endblock %}
+
+{% block twitter_title %}
+{% if category %}
+{{ category.name }} Posts | My Blog
+{% elif tag %}
+{{ tag.name }} Posts | My Blog
+{% else %}
+Posts | My Blog
+{% endif %}
+{% endblock %}
+
+{% block twitter_description %}
+{% if category %}
+Read the latest posts in the {{ category.name }} category on My Blog.
+{% elif tag %}
+Read the latest posts tagged with {{ tag.name }} on My Blog.
+{% else %}
+Browse posts, articles, tutorials, and updates on My Blog.
+{% endif %}
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8">
+
+            <header class="mb-5">
+
+                <p class="text-body-secondary mb-2">
+                    Category
+                </p>
+
+                <h1 class="display-5">
+                    {{ category.name }}
+                </h1>
+
+            </header>
+
+
+            {% for post in page_obj %}
+
+                {% include "blog/includes/post_card.html" with post=post %}
+
+            {% empty %}
+
+                <div class="alert alert-secondary">
+                    No published posts in this category.
+                </div>
+
+            {% endfor %}
+            {% include "blog/includes/pagination.html" with page_obj=page_obj %}
+
+        </div>
+
+    </div>
+
+{% endblock %}

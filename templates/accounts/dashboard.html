@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">
+    Welcome
+</h1>
+<p>
+    Welcome back, 
+    <strong>{{ user.first_name|default:user.username }}</strong>
+</p>
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card mb-3">
+            <div class="card-body">
+                <h3>
+                    Published Posts
+                </h3>
+                <p class="display-6">
+                    {{ published_count }}
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card mb-3">
+            <div class="card-body">
+                <h3>
+                    Draft Posts
+                </h3>
+                <p class="display-6">
+                    {{ draft_count }}
+                </P>
+            </div>
+        </div>
+    </div>
+    <a href={% url 'blog:post_create' %} class="btn btn-primary mb-4">
+        Create New Post
+    </a>
+    <a href="{% url 'blog:my_posts' %}" class="btn btn-outline-primary">
+        View all Posts
+    </a>
+    <a href="{% url 'blog:comment_list' %}" class="btn btn-primary mb-4">
+        Comments
+    </a>
+</div>
+<h2 class="mt-5">
+    Recent Posts
+</h2>
+{% if recent_posts %}
+<ul class="list-group">
+    {% for post in recent_posts %}
+    <li class="list-group-item">
+        <span>
+            {{ post.title }}
+        </span>
+
+        <a href="{% url 'blog:post_edit' post.pk %}" class="btn btn-sm btn-outline-primary">
+            Edit
+        </a>
+        <a href="{% url 'blog:post_delete' post.pk %}" class="btn btn-sm btn-outline-danger">
+            Delete
+        </a>
+        
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>
+    You have not written any posts yet.
+</p>
+{% endif %}
+{% endblock %}

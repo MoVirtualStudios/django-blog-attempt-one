@@ -1,0 +1,412 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+{{ post.title }} | My Blog
+{% endblock %}
+
+{% block meta_description %}
+{% if post.excerpt %}
+{{ post.excerpt|striptags|truncatechars:155 }}
+{% else %}
+{{ post.body|striptags|truncatechars:155 }}
+{% endif %}
+{% endblock %}
+
+{% block canonical_url %}
+{{ request.scheme }}://{{ request.get_host }}{{ post.get_absolute_url }}
+{% endblock %}
+
+{% block og_type %}
+article
+{% endblock %}
+
+{% block og_title %}
+{{ post.title }} | My Blog
+{% endblock %}
+
+{% block og_description %}
+{% if post.excerpt %}
+{{ post.excerpt|striptags|truncatechars:155 }}
+{% else %}
+{{ post.body|striptags|truncatechars:155 }}
+{% endif %}
+{% endblock %}
+
+{% block og_url %}
+{{ request.scheme }}://{{ request.get_host }}{{ post.get_absolute_url }}
+{% endblock %}
+
+{% block og_image %}
+{% if post.featured_image %}
+<meta
+    property="og:image"
+    content="{{ request.scheme }}://{{ request.get_host }}{{ post.featured_image.url }}"
+>
+{% endif %}
+{% endblock %}
+
+{% block twitter_card %}
+{% if post.featured_image %}
+summary_large_image
+{% else %}
+summary
+{% endif %}
+{% endblock %}
+
+{% block twitter_title %}
+{{ post.title }} | My Blog
+{% endblock %}
+
+{% block twitter_description %}
+{% if post.excerpt %}
+{{ post.excerpt|striptags|truncatechars:155 }}
+{% else %}
+{{ post.body|striptags|truncatechars:155 }}
+{% endif %}
+{% endblock %}
+
+{% block twitter_image %}
+{% if post.featured_image %}
+<meta
+    name="twitter:image"
+    content="{{ request.scheme }}://{{ request.get_host }}{{ post.featured_image.url }}"
+>
+{% endif %}
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8">
+
+            <article>
+
+                <header class="mb-5">
+
+                    <h1 class="display-4">
+                        {{ post.title }}
+                    </h1>
+
+                    <p class="text-body-secondary">
+
+                        By 
+                        <a 
+                            href="{% url 'accounts:author_detail' post.author.username %}"
+                            class="text-decoration-none"
+                        >
+                            {{ post.author.get_full_name|default:post.author.username }}
+                        </a>
+                        <!--{{ post.author }}-->
+
+                        &middot;
+
+                        {{ post.published_at|date:"F j, Y" }}
+
+                        &middot;
+
+                        <span>
+                            {{ post.reading_time }} min read
+                        </span>
+
+                        <span class="ms-3">
+                            {{ post.view_count }} views
+                        </span>
+
+                        <div class="my-3">
+
+                            {% if user.is_authenticated %}
+
+                                <form
+                                    method="post"
+                                    action="{% url 'blog:post_bookmark_toggle' post.pk %}"
+                                    class="d-inline"
+                                >
+
+                                    {% csrf_token %}
+
+                                    <input
+                                        type="hidden"
+                                        name="next"
+                                        value="{{ request.get_full_path }}"
+                                    >
+
+                                    {% if user_bookmarked %}
+
+                                        <button
+                                            type="submit"
+                                            class="btn btn-warning"
+                                        >
+                                            Remove Bookmark
+                                        </button>
+
+                                    {% else %}
+
+                                        <button
+                                            type="submit"
+                                            class="btn btn-outline-warning"
+                                        >
+                                            Bookmark
+                                        </button>
+
+                                    {% endif %}
+
+                                </form>
+
+                            {% else %}
+
+                                <a
+                                    href="{% url 'accounts:login' %}?next={{ request.get_full_path }}"
+                                    class="btn btn-outline-warning"
+                                >
+                                    Login to Bookmark
+                                </a>
+
+                            {% endif %}
+
+                            <span class="text-muted ms-2">
+                                {{ bookmark_count }} bookmarks
+                            </span>
+
+                        </div>
+
+                        <div class="my-3">
+
+                            {% if user.is_authenticated %}
+
+                                <form
+                                    method="post"
+                                    action="{% url 'blog:post_like_toggle' post.pk %}"
+                                    class="d-inline"
+                                >
+
+                                    {% csrf_token %}
+
+                                    <input
+                                        type="hidden"
+                                        name="next"
+                                        value="{{ request.get_full_path }}"
+                                    >
+
+                                    {% if user_liked %}
+
+                                        <button
+                                            type="submit"
+                                            class="btn btn-danger"
+                                        >
+                                            Unlike
+                                        </button>
+
+                                    {% else %}
+
+                                        <button
+                                            type="submit"
+                                            class="btn btn-outline-danger"
+                                        >
+                                            Like
+                                        </button>
+
+                                    {% endif %}
+
+                                </form>
+
+                            {% else %}
+
+                                <a
+                                    href="{% url 'accounts:login' %}?next={{ request.get_full_path }}"
+                                    class="btn btn-outline-danger"
+                                >
+                                    Login to Like
+                                </a>
+
+                            {% endif %}
+
+                            <span class="text-muted ms-2">
+                                {{ like_count }} like{{ like_count|pluralize }}
+                            </span>
+
+                        </div>
+
+                    </p>
+
+                    <p>
+                        Category:
+
+                        <a
+                            href="{{ post.category.get_absolute_url }}"
+                            class="text-decoration-none"
+                        >
+                            {{ post.category.name }}
+                        </a>
+                    </p>
+
+                    {% if post.tags.exists %}
+
+                        <div class="mb-4">
+
+                            {% for tag in post.tags.all %}
+
+                                <a
+                                    href="{{ tag.get_absolute_url }}"
+                                    class="badge text-bg-secondary text-decoration-none"
+                                >
+                                    {{ tag.name }}
+                                </a>
+
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                    
+
+                </header>
+
+                {% if post.featured_image %}
+
+                    <figure class="mb-5">
+
+                        <img
+                            src="{{ post.featured_image.url }}"
+                            class="img-fluid rounded w-100"
+                            alt="{% if post.featured_image_alt %}{{ post.featured_image_alt }}{% else %}{{ post.title }}{% endif %}"
+                        >
+
+                    </figure>
+
+                {% endif %}
+
+                <div class="article-body fs-5 lh-lg">
+
+                    
+                    <div class="post-content">
+                        {{ post.body|safe }}
+                    </div>
+                    
+
+                </div>
+
+            </article>
+            <div>
+                {% if related_posts %}
+
+                    <section class="mt-5">
+
+                        <h2 class="h4 mb-4">
+                            Related Posts
+                        </h2>
+
+                        {% for post in related_posts %}
+
+                            {% include "blog/includes/post_card.html" with post=post %}
+
+                        {% endfor %}
+
+                    </section>
+
+                {% endif %}
+            </div>
+            
+            <hr class="my-5">
+
+            <section class="mt-5">
+                <h2 class="h3 mb-4">
+                    Comments
+                </h2>
+
+                {% for comment in comments%}
+                    <article class="border-bottom py-4">
+                        <header class="mb2">
+                            <strong>
+                                {{ comment.name }}
+                            </strong>
+                            <span class="text-body-secondary ms-2">
+                                {{ comment.created_at|date:"F j, Y" }}
+                            </span>
+                        </header>
+                        <div>
+                            {{ comment.body|linebreaks}}
+                        </div>
+                    </article>
+                {% empty %}
+                    <p class="text-body-secondary">
+                        No comments yet.
+                    </p>
+                {% endfor %}
+            </section>
+            <section class="mt-5">
+                <h2 class="h3 mb-4">
+                    Leave a comment
+                </h2>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ comment_form.website }}
+                    {{ comment_form.timestamp }}
+                    {% if comment_form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ comment_form.non_field_errors}}
+                        </div>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <label for="{{ comment_form.name.id_for_label }}" class="form-label" >
+                            Name
+                        </label>
+                        {{ comment_form.name }}
+
+                        {% for error in comment_form.name.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ comment_form.email.id_for_label }}" class="form-label" >
+                            Email
+                        </label>
+                        {{ comment_form.email }}
+                        <div class="form-text">
+                            Your email will not be displayed publicly.
+                        </div>
+                        {% for error in comment_form.email.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ comment_form.body.id_for_label }}" class="form-label" >
+                            Comment
+                        </label>
+
+                        {{ comment_form.body }}
+
+                        {% for error in comment_form.body.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        Submit Comment
+                    </button>
+                </form>
+            </section>
+
+            <a
+                href="{% url 'blog:post_list' %}"
+                class="btn btn-outline-secondary"
+            >
+                Back to all posts
+            </a>
+
+        </div>
+
+    </div>
+
+{% endblock %}

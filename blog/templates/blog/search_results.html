@@ -1,0 +1,87 @@
+{% extends "base.html"%}
+
+{% block title %}
+{% if query %}
+Search results for "{{ query }}" | My Blog
+{% else %}
+Search | My Blog
+{% endif %}
+{% endblock %}
+
+{% block meta_description %}
+{% if query %}
+Search results for {{ query }} on My Blog.
+{% else %}
+Search articles, tutorials, categories, tags, and ideas on My Blog.
+{% endif %}
+{% endblock %}
+
+{% block og_title %}
+{% if query %}
+Search results for "{{ query }}" | My Blog
+{% else %}
+Search | My Blog
+{% endif %}
+{% endblock %}
+
+{% block og_description %}
+{% if query %}
+Search results for {{ query }} on My Blog.
+{% else %}
+Search articles, tutorials, categories, tags, and ideas on My Blog.
+{% endif %}
+{% endblock %}
+
+{% block twitter_title %}
+{% if query %}
+Search results for "{{ query }}" | My Blog
+{% else %}
+Search | My Blog
+{% endif %}
+{% endblock %}
+
+{% block twitter_description %}
+{% if query %}
+Search results for {{ query }} on My Blog.
+{% else %}
+Search articles, tutorials, categories, tags, and ideas on My Blog.
+{% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <header class="mb-5">
+                <h1 class="display-5">
+                    Search
+                </h1>
+                <form action="{% url 'blog:search_posts' %}" method="get" role="search" class="mt-4">
+                    <div class="input-group">
+                        <input type="search" name="q" value="{{ query }}" class="form-control" placeholder="Search articles..." arial-lable="Search articles">
+                        <button type="submit" >
+                            Search
+                        </button>
+                    </div>
+                </form>
+            </header>
+
+            {% if query %}
+                <p class="text-body-secondary mb-4">
+                    Searh results for <strong>{{ query }} </strong>
+                </p>
+                {% for post in page_obj %}
+                    {% include "blog/includes/post_card.html" with post=post %}
+                {% empty %}
+                    <div class="alert alert-secondary">
+                        No articles matched your search.
+                    </div>
+                {% endfor %}
+                
+            {% else %}
+                    <div class="alert alert-light border">
+                        Enter a search term to find articles.
+                    </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

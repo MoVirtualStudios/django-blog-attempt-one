@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}
+Comments
+{% endblock %}
+
+{% block content %}
+
+<h1 class="mb-4">
+
+    Comment Moderation
+
+</h1>
+
+<table class="table table-hover">
+
+    <thead>
+
+        <tr>
+
+            <th>Author</th>
+
+            <th>Comment</th>
+
+            <th>Post</th>
+
+            <th>Status</th>
+
+            <th>Actions</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+    {% for comment in comments %}
+
+        <tr>
+
+            <td>
+
+                {{ comment.name }}
+
+            </td>
+
+            <td>
+
+                {{ comment.body|truncatewords:15 }}
+
+            </td>
+
+            <td>
+
+                {{ comment.post.title }}
+
+            </td>
+
+            <td>
+
+                {% if comment.approved %}
+
+                    <span class="badge bg-success">
+
+                        Approved
+
+                    </span>
+
+                {% else %}
+
+                    <span class="badge bg-warning text-dark">
+
+                        Pending
+
+                    </span>
+
+                {% endif %}
+
+            </td>
+
+            <td>
+
+                {% if not comment.approved %}
+
+                    <a
+                        href="{% url 'blog:comment_approve' comment.pk %}"
+                        class="btn btn-sm btn-success"
+                    >
+                        Approve
+                    </a>
+
+                {% endif %}
+
+                <a
+                    href="{% url 'blog:comment_delete' comment.pk %}"
+                    class="btn btn-sm btn-danger"
+                >
+                    Delete
+                </a>
+
+            </td>
+
+        </tr>
+
+    {% endfor %}
+
+    </tbody>
+
+</table>
+
+{% endblock %}

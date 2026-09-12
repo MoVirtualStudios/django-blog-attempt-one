@@ -1,0 +1,224 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>
+        {% block title %}
+            My Blog
+        {% endblock %}
+    </title>
+    
+    <meta
+        name="description"
+        content="{% block meta_description %}A modern blog for articles, ideas, tutorials, and useful learning resources.{% endblock %}"
+    >
+
+    <link
+        rel="canonical"
+        href="{% block canonical_url %}{{ request.scheme }}://{{ request.get_host }}{{ request.path }}{% endblock %}"
+    >
+
+    <meta
+        property="og:type"
+        content="{% block og_type %}website{% endblock %}"
+    >
+
+    <meta
+        property="og:title"
+        content="{% block og_title %}My Blog{% endblock %}"
+    >
+
+    <meta
+        property="og:description"
+        content="{% block og_description %}A modern blog for articles, ideas, tutorials, and useful learning resources.{% endblock %}"
+    >
+
+    <meta
+        property="og:url"
+        content="{% block og_url %}{{ request.scheme }}://{{ request.get_host }}{{ request.path }}{% endblock %}"
+    >
+    {% block og_image %}
+    {% endblock %}
+
+    <meta
+        name="twitter:title"
+        content="{% block twitter_title %}My Blog{% endblock %}"
+    >
+
+    <meta
+        name="twitter:description"
+        content="{% block twitter_description %}A modern blog for articles, ideas, tutorials, and useful learning resources.{% endblock %}"
+    >
+
+    {% block twitter_image %}
+    {% endblock %}
+
+
+
+
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+        crossorigin="anonymous"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/site.css' %}"
+    >
+    {% if form %}
+        {{ form.media }}
+    {% endif %}
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+    <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+
+        <div class="container">
+
+            <a
+                class="navbar-brand"
+                href="{% url 'blog:post_list' %}"
+            >
+                My Blog
+            </a>
+
+            <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mainNavbar"
+                aria-controls="mainNavbar"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div
+                class="collapse navbar-collapse"
+                id="mainNavbar"
+            >
+                <ul class="navbar-nav me-auto">
+
+                    <li class="nav-item">
+                        <a
+                            class="nav-link"
+                            href="{% url 'blog:post_list' %}"
+                        >
+                            Home
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+            <form action="{% url 'blog:search_posts' %}" method="get" role="search" class="d-flex ms-lg mt-3 mt-lg-0">
+                <input type="search" name="q" value="{{ request.GET.get.q }}" class="form-control me-2" placeholder="Search" arial-label="Search">
+                <button type="submit" class="btn btn-outline-light">
+                    Search
+                </button>
+            </form>
+
+            {% if user.is_authenticated %}
+                <span class="navbar-text ms-3 me-3">
+                    Hello, {{user.get_full_name|default:user.username }}
+                </span>
+                <a class="btn btn-outline-light me-2" href="{% url 'accounts:dashboard' %}">
+                    Dashboard
+                </a>
+                <a class="btn btn-outline-light me-2" href="{% url 'accounts:profile_edit' %}">
+                    Profile
+                </a>
+                <a class="btn btn-outline-light me-2"
+                    href="{% url 'blog:bookmark_list' %}"
+                >
+                    Bookmarks
+                </a>
+                <a
+                    class="btn btn-outline-light me-2"
+                    href="{% url 'blog:about' %}"
+                >
+                    About
+                </a>
+                <a
+                    class="btn btn-outline-light me-2"
+                    href="{% url 'blog:contact' %}"
+                >
+                    Contact
+                </a>
+                <form
+                    method="post"
+                    action="{% url 'accounts:logout' %}"
+                    class="d-inline"
+                >
+                    {% csrf_token %}
+
+                    <button
+                        type="submit"
+                        class="btn btn-outline-light"
+                    >
+                        Logout
+                    </button>
+                </form>
+                
+            {% else %}
+                <a class="btn btn-outline-light me-2" href="{% url 'accounts:login' %}">
+                    Login
+                </a>
+                <a class="btn btn-light" href="{% url 'accounts:register' %}">
+                    Register
+                </a>
+            {% endif %}
+
+        </div>
+
+    </nav>
+    
+    <main class="container py-5 flex-grow-1">
+        {% if messages %}
+            <div class="row justify-content-center mb-4">
+                <div class="col-lg-8">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" arial-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+
+    </main>
+
+
+    <footer class="border-top py-4">
+
+        <div class="container text-center text-body-secondary">
+
+            &copy; {% now "Y" %} My Blog
+
+        </div>
+
+    </footer>
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"
+    ></script>
+
+</body>
+
+</html>

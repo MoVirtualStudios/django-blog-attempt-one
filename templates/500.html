@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}
+Server Error | My Blog
+{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-lg-7 text-center">
+
+        <h1 class="display-1 fw-bold">
+            500
+        </h1>
+
+        <h2 class="mb-3">
+            Something Went Wrong
+        </h2>
+
+        <p class="lead text-body-secondary mb-4">
+            The server had a problem while loading this page.
+            Please try again later.
+        </p>
+
+        <a
+            href="{% url 'blog:post_list' %}"
+            class="btn btn-primary"
+        >
+            Go to Homepage
+        </a>
+
+        <a
+            href="{% url 'blog:contact' %}"
+            class="btn btn-outline-secondary ms-2"
+        >
+            Contact Us
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

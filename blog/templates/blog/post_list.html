@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Latest Posts | My Blog
+{% endblock %}
+
+{% block meta_description %}
+Read the latest articles, ideas, tutorials, and updates from My Blog.
+{% endblock %}
+
+{% block og_title %}
+Latest Posts | My Blog
+{% endblock %}
+
+{% block og_description %}
+Read the latest articles, ideas, tutorials, and updates from My Blog.
+{% endblock %}
+
+{% block twitter_title %}
+Latest Posts | My Blog
+{% endblock %}
+
+{% block twitter_description %}
+Read the latest articles, ideas, tutorials, and updates from My Blog.
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8">
+
+            <header class="mb-5">
+
+                <h1 class="display-5">
+                    Latest Posts
+                </h1>
+
+                <p class="lead text-body-secondary">
+                    Articles, ideas, and updates.
+                </p>
+
+            </header>
+
+            {% for post in page_obj %}
+
+                {% include "blog/includes/post_card.html" with post=post %}
+                
+
+            {% empty %}
+
+                <div class="alert alert-secondary">
+
+                    No published posts yet.
+
+                </div>
+
+            {% endfor %}
+
+            {% include "blog/includes/pagination.html" with page_obj=page_obj %}
+
+        </div>
+
+    </div>
+
+{% endblock %}

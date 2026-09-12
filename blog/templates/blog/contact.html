@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}
+Contact | My Blog
+{% endblock %}
+
+{% block meta_description %}
+Contact My Blog with questions, suggestions, feedback, or messages about articles, tutorials, and publishing.
+{% endblock %}
+
+{% block og_title %}
+Contact | My Blog
+{% endblock %}
+
+{% block og_description %}
+Contact My Blog with questions, suggestions, feedback, or messages about articles, tutorials, and publishing.
+{% endblock %}
+
+{% block twitter_title %}
+Contact | My Blog
+{% endblock %}
+
+{% block twitter_description %}
+Contact My Blog with questions, suggestions, feedback, or messages about articles, tutorials, and publishing.
+{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-lg-7">
+
+        <header class="mb-4">
+
+            <h1 class="display-6">
+                Contact
+            </h1>
+
+            <p class="lead text-body-secondary">
+                Have a question, suggestion, or message? Send it below.
+            </p>
+
+        </header>
+
+        <div class="card shadow-sm">
+
+            <div class="card-body p-4">
+
+                <form method="post" novalidate>
+
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+
+                        <div class="alert alert-danger">
+
+                            {{ form.non_field_errors }}
+
+                        </div>
+
+                    {% endif %}
+
+                    <div class="mb-3">
+
+                        <label
+                            for="{{ form.name.id_for_label }}"
+                            class="form-label"
+                        >
+                            Name
+                        </label>
+
+                        {{ form.name }}
+
+                        {% for error in form.name.errors %}
+
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label
+                            for="{{ form.email.id_for_label }}"
+                            class="form-label"
+                        >
+                            Email
+                        </label>
+
+                        {{ form.email }}
+
+                        {% for error in form.email.errors %}
+
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label
+                            for="{{ form.subject.id_for_label }}"
+                            class="form-label"
+                        >
+                            Subject
+                        </label>
+
+                        {{ form.subject }}
+
+                        {% for error in form.subject.errors %}
+
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label
+                            for="{{ form.message.id_for_label }}"
+                            class="form-label"
+                        >
+                            Message
+                        </label>
+
+                        {{ form.message }}
+
+                        {% for error in form.message.errors %}
+
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        Send Message
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

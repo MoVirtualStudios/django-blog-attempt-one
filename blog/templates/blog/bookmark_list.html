@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}
+My Bookmarks
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <h1>
+        My Bookmarks
+    </h1>
+
+    <a
+        href="{% url 'blog:post_list' %}"
+        class="btn btn-outline-secondary"
+    >
+        Browse Posts
+    </a>
+
+</div>
+
+{% if page_obj.object_list %}
+
+    <div class="row g-4">
+
+        {% for post in page_obj %}
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="card h-100 shadow-sm">
+
+                    {% if post.featured_image %}
+
+                        <img
+                            src="{{ post.featured_image.url }}"
+                            class="card-img-top"
+                            alt="{{ post.featured_image_alt|default:post.title }}"
+                        >
+
+                    {% endif %}
+
+                    <div class="card-body d-flex flex-column">
+
+                        {% if post.category %}
+
+                            <span class="badge bg-secondary align-self-start mb-2">
+                                {{ post.category.name }}
+                            </span>
+
+                        {% endif %}
+
+                        <h2 class="h5">
+
+                            <a
+                                href="{{ post.get_absolute_url }}"
+                                class="text-decoration-none"
+                            >
+                                {{ post.title }}
+                            </a>
+
+                        </h2>
+
+                        <p class="text-muted small mb-2">
+
+                            By {{ post.author.username }}
+
+                            {% if post.published_at %}
+                                • {{ post.published_at|date:"M d, Y" }}
+                            {% endif %}
+
+                        </p>
+
+                        {% if post.excerpt %}
+
+                            <p>
+                                {{ post.excerpt|truncatewords:24 }}
+                            </p>
+
+                        {% endif %}
+
+                        <div class="mt-auto d-flex justify-content-between align-items-center">
+
+                            <a
+                                href="{{ post.get_absolute_url }}"
+                                class="btn btn-sm btn-primary"
+                            >
+                                Read
+                            </a>
+
+                            <form
+                                method="post"
+                                action="{% url 'blog:post_bookmark_toggle' post.pk %}"
+                            >
+
+                                {% csrf_token %}
+
+                                <input
+                                    type="hidden"
+                                    name="next"
+                                    value="{{ request.get_full_path }}"
+                                >
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-sm btn-outline-warning"
+                                >
+                                    Remove
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% include "blog/includes/pagination.html" %}
+
+{% else %}
+
+    <div class="alert alert-info">
+        You have not bookmarked any posts yet.
+    </div>
+
+    <a
+        href="{% url 'blog:post_list' %}"
+        class="btn btn-primary"
+    >
+        Browse Posts
+    </a>
+
+{% endif %}
+
+{% endblock %}

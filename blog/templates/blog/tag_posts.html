@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+{{ tag.name }} | My Blog
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8">
+
+            <header class="mb-5">
+
+                <p class="text-body-secondary mb-2">
+                    Tag
+                </p>
+
+                <h1 class="display-5">
+                    {{ tag.name }}
+                </h1>
+
+            </header>
+
+
+            {% for post in page_obj %}
+
+                {% include "blog/includes/post_card.html" with post=post %}
+
+            {% empty %}
+
+                <div class="alert alert-secondary">
+                    No published posts with this tag.
+                </div>
+
+            {% endfor %}
+            {% include "blog/includes/pagination.html" with page_obj=page_obj %}
+
+        </div>
+
+    </div>
+
+{% endblock %}

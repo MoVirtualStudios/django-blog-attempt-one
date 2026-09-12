@@ -1,0 +1,60 @@
+<article class="card shadow-sm mb-4">
+
+    {% if post.featured_image %}
+
+        <img
+            src="{{ post.featured_image.url }}"
+            class="card-img-top post-card-image"
+            alt="{% if post.featured_image_alt %}{{ post.featured_image_alt }}{% else %}{{ post.title }}{% endif %}"
+        >
+
+    {% endif %}
+
+    <div class="card-body p-4">
+
+        <h2 class="card-title h3">
+
+            <a
+                href="{{ post.get_absolute_url }}"
+                class="text-decoration-none"
+            >
+                {{ post.title }}
+            </a>
+
+        </h2>
+
+        <p class="text-body-secondary">
+
+            By
+            <a 
+                href="{% url 'accounts:author_detail' post.author.username %}"
+                class="text-decoration-none"
+            >
+                {{ post.author.get_full_name|default:post.author.username }}
+            </a>
+            <!--{{ post.author }}-->
+
+            &middot;
+
+            {{ post.published_at|date:"F j, Y" }}
+
+        </p>
+
+        <p class="card-text">
+
+            {{ post.body|truncatewords:40 }}
+
+        </p>
+
+        {% include "blog/includes/post_stats.html" with post=post %}
+
+        <a
+            href="{{ post.get_absolute_url }}"
+            class="btn btn-outline-primary"
+        >
+            Read article
+        </a>
+
+    </div>
+
+</article>

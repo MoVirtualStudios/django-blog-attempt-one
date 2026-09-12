@@ -1,0 +1,15 @@
+{% with like_total=post.like_total|default:post.likes.count bookmark_total=post.bookmark_total|default:post.bookmarks.count %}
+
+    <div class="d-flex gap-3 text-muted small mt-2">
+
+        <span>
+            Likes: {{ like_total }}
+        </span>
+
+        <span>
+            Bookmarks: {{ bookmark_total }}
+        </span>
+
+    </div>
+
+{% endwith %}

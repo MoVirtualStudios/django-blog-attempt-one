@@ -1,0 +1,84 @@
+{% extends "base.html"%}
+
+{% block title %}
+{{ author.get_full_name|default:author.username }} | My Blog
+{% endblock %}
+
+{% block meta_description %}
+Read articles by {{ author.get_full_name|default:author.username }} on My Blog.
+{% endblock %}
+
+{% block og_title %}
+{{ author.get_full_name|default:author.username }} | My Blog
+{% endblock %}
+
+{% block og_description %}
+Read articles by {{ author.get_full_name|default:author.username }} on My Blog.
+{% endblock %}
+
+{% block twitter_title %}
+{{ author.get_full_name|default:author.username }} | My Blog
+{% endblock %}
+
+{% block twitter_description %}
+Read articles by {{ author.get_full_name|default:author.username }} on My Blog.
+{% endblock %}
+
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <header class="mb-5">
+                <div class="row align-items-center g-4">
+                    {% if profile and profile.avatar %}
+                        <div class="col-auto">
+                            <img 
+                                src="{{ profile.avatar.url }}"    
+                                alt="{{ author.get_full_name|default:author.username }}"
+                                class="rounder-circle author-avatar"
+                            >
+                        </div>
+                    {% endif %}
+                    <div class="col">
+                        <p class="text-body-secondary mb-2">
+                            Author
+                        </p>
+                        <h1 class="display-5 mb-3">
+                            {{ author.get_full_name|default:author.username }}
+                        </h1>
+
+                        {% if profile %}
+                            {% if profile.bio %}
+                                <p class="lead">
+                                    {{ profile.bio }}
+                                </p>
+                            {% endif %}
+                            {% if profile.website %}
+                                <a
+                                    href="{{ profile.website }}"
+                                    target="_blank"
+                                    rel="oopener noreferrer"
+                                > 
+                                    Visit website 
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+
+            </header>
+            <h2 class="h4 mb-4">
+                Articles by {{ author.get_full_name|default:author.username }}
+            </h2>
+
+            {% for post in page_obj %}
+                {% include "blog/includes/post_card.html" with post=post %}
+            {% empty %}
+                <div class="alert alert-secondary">
+                    This author has no published posts yet.
+                </div>
+            {% endfor %}
+            {% include "blog/includes/pagination.html" with page_obj=page_obj %}
+        </div>
+    </div>
+{% endblock %}

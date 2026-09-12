@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block meta_description %}
+Learn about My Blog, a modern Django-powered platform for articles, tutorials, reflections, comments, bookmarks, and likes.
+{% endblock %}
+
+{% block og_title %}
+About | My Blog
+{% endblock %}
+
+{% block og_description %}
+Learn about My Blog, a modern Django-powered platform for articles, tutorials, reflections, comments, bookmarks, and likes.
+{% endblock %}
+
+{% block twitter_title %}
+About | My Blog
+{% endblock %}
+
+{% block twitter_description %}
+Learn about My Blog, a modern Django-powered platform for articles, tutorials, reflections, comments, bookmarks, and likes.
+{% endblock %}
+
+{% block title %}
+About | My Blog
+{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-lg-8">
+
+        <header class="mb-5">
+
+            <h1 class="display-5">
+                About My Blog
+            </h1>
+
+            <p class="lead text-body-secondary">
+                A place for thoughtful articles, practical ideas, and useful learning resources.
+            </p>
+
+        </header>
+
+        <section class="mb-5">
+
+            <h2 class="h4">
+                What this blog is about
+            </h2>
+
+            <p>
+                My Blog is a simple and modern publishing platform built for sharing articles,
+                tutorials, reflections, and updates. Readers can explore posts by category,
+                search for topics, read rich articles, leave comments, like posts, and save
+                posts to their bookmarks.
+            </p>
+
+        </section>
+
+        <section class="mb-5">
+
+            <h2 class="h4">
+                What readers can do
+            </h2>
+
+            <p>
+                Readers can browse the latest posts, search for useful content, follow author
+                pages, join conversations through comments, like helpful articles, and bookmark
+                posts they want to return to later.
+            </p>
+
+        </section>
+
+        <section class="mb-5">
+
+            <h2 class="h4">
+                What writers can do
+            </h2>
+
+            <p>
+                Writers can create accounts, manage their profiles, write rich articles with
+                images and formatted content, save drafts, publish posts, edit their work, and
+                moderate comments from readers.
+            </p>
+
+        </section>
+
+        <section class="mb-5">
+
+            <h2 class="h4">
+                Built with Django
+            </h2>
+
+            <p>
+                This platform is built with Django, a powerful Python web framework. It includes
+                user authentication, post management, search, categories, tags, comments,
+                bookmarks, likes, contact messaging, and a clean responsive design.
+            </p>
+
+        </section>
+
+        <div class="card shadow-sm">
+
+            <div class="card-body p-4">
+
+                <h2 class="h5">
+                    Start exploring
+                </h2>
+
+                <p>
+                    Visit the latest posts page to read recent articles or use the contact page
+                    to send a message.
+                </p>
+
+                <a
+                    href="{% url 'blog:post_list' %}"
+                    class="btn btn-primary"
+                >
+                    Browse Posts
+                </a>
+
+                <a
+                    href="{% url 'blog:contact' %}"
+                    class="btn btn-outline-secondary ms-2"
+                >
+                    Contact
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
