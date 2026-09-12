@@ -256,11 +256,76 @@ LOGOUT_REDIRECT_URL = '/'
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 
-MAILERS = {
-    'default': {
-        'BACKEND': 'django.core.mail.backends.console.EmailBackend',
-    },
-}
+#MAILERS = {
+#    'default': {
+#        'BACKEND': 'django.core.mail.backends.console.EmailBackend',
+#    },
+#}
+
+EMAIL_MODE = os.environ.get(
+    "EMAIL_MODE",
+    "console",
+)
+
+
+if EMAIL_MODE == "smtp":
+
+    SMTP_HOST = os.environ.get(
+        "SMTP_HOST",
+    )
+
+    SMTP_PORT = int(
+        os.environ.get(
+            "SMTP_PORT",
+            "587",
+        )
+    )
+
+    SMTP_USERNAME = os.environ.get(
+        "SMTP_USERNAME",
+    )
+
+    SMTP_PASSWORD = os.environ.get(
+        "SMTP_PASSWORD",
+    )
+
+    SMTP_USE_TLS = os.environ.get(
+        "SMTP_USE_TLS",
+        "True",
+    ) == "True"
+
+    SMTP_USE_SSL = os.environ.get(
+        "SMTP_USE_SSL",
+        "False",
+    ) == "True"
+
+    if not SMTP_HOST:
+
+        raise ValueError(
+            "SMTP_HOST is missing. Add it to the environment variables.",
+        )
+
+    MAILERS = {
+        "default": {
+            "BACKEND": "django.core.mail.backends.smtp.EmailBackend",
+            "OPTIONS": {
+                "host": SMTP_HOST,
+                "port": SMTP_PORT,
+                "username": SMTP_USERNAME,
+                "password": SMTP_PASSWORD,
+                "use_tls": SMTP_USE_TLS,
+                "use_ssl": SMTP_USE_SSL,
+            },
+        },
+    }
+
+else:
+
+    MAILERS = {
+        "default": {
+            "BACKEND": "django.core.mail.backends.console.EmailBackend",
+        },
+    }
 
 #DEFAULT_FROM_EMAIL = "noreply@myblog.local"
 
