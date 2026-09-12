@@ -88,12 +88,18 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    "cloudinary_storage",
+    "cloudinary",
+
     "django.contrib.sites",
     "django.contrib.sitemaps",
+    'django_ckeditor_5',
 
     'blog',
     'accounts',
-    'django_ckeditor_5',
+    
+
+
 ]
 
 SITE_ID = 1
@@ -229,17 +235,26 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = "/static/"
 
 STATICFILES_DIRS = [
-    BASE_DIR / "static"
+    BASE_DIR / "static",
 ]
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
+
+# Media files uploaded by users
 MEDIA_URL = "/media/"
 
 MEDIA_ROOT = BASE_DIR / "media"
+
+
+USE_CLOUDINARY = os.environ.get(
+    "USE_CLOUDINARY",
+    "False",
+) == "True"
+
 
 STORAGES = {
     "default": {
@@ -250,8 +265,26 @@ STORAGES = {
     },
 }
 
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
+
+if USE_CLOUDINARY:
+
+    CLOUDINARY_URL = os.environ.get(
+        "CLOUDINARY_URL",
+    )
+
+    if not CLOUDINARY_URL:
+
+        raise ValueError(
+            "CLOUDINARY_URL is missing. Add it to the environment variables.",
+        )
+
+    STORAGES["default"] = {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    }
+
+
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
 
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
@@ -413,7 +446,15 @@ CKEDITOR_5_CONFIGS = {
     },
 }
 
-CKEDITOR_5_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+#CKEDITOR_5_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+
+if USE_CLOUDINARY:
+
+    CKEDITOR_5_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+
+else:
+
+    CKEDITOR_5_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 
 CKEDITOR_5_UPLOAD_PATH = "uploads/"
 
